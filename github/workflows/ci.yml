@@ -2,7 +2,10 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+  workflow_dispatch:
 
 jobs:
   build-test-deploy:
@@ -19,12 +22,13 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install pytest
+          python -m pip install --upgrade pip
+          python -m pip install pytest
 
       - name: Run Tests
         run: |
-          pytest test_app.py
+          python -m pytest -q
 
       - name: Deploy
-        if: success()
+        if: ${{ success() }}
         run: echo "Deployment step executed successfully!"
